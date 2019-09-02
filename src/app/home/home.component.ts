@@ -1,8 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {Hero, HttpService} from '../http.service';
-import {MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
+
+export class UserDetails {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+
+  constructor(number: number, number2: number, s: string, s2: string) {
+    this.userId = number;
+    this.id = number2;
+    this.title = s;
+    this.body = s2;
+  }
+};
 
 @Component({
   selector: 'app-home',
@@ -13,7 +27,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 export class HomeComponent implements OnInit {
 
   user: Hero[] = [];
-  phones: Hero[] = [];
+  ud: UserDetails[] = [];
+
   options: FormGroup;
   selectedDom: string;
   selectedPhone: string;
@@ -29,8 +44,11 @@ export class HomeComponent implements OnInit {
     return Math.max(10, this.options.value.fontSize);
   }
 
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
   ngOnInit() {
     this.getUsers();
+    this.postUsers();
   }
 
   displayedColumns: string[] = ['id', 'name', 'username', 'phone'];
@@ -42,8 +60,14 @@ export class HomeComponent implements OnInit {
         this.user = users;
         //this.phones = users;
         this.dataSource = new MatTableDataSource(this.user);
+        this.dataSource.paginator = this.paginator;
       });
   }
 
+  postUsers(): void {
+    this.http.updateUserFromApi(new UserDetails(133, 101, 'Aklilu', 'Belay'))
+      .subscribe( u=>{this.ud=u;
+      });
+  }
 
 }

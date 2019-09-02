@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
+import {UserDetails} from './home/home.component';
 
 
 export interface Hero {
   id:string;
-  username:string;
   username:string;
   phone:string;
   website:string;
@@ -14,24 +14,36 @@ export interface Hero {
   company:Array<string>;
 };
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
 
+  private getUsers = 'http://jsonplaceholder.typicode.com/users';  // URL to web api
+  private postUsers = 'http://jsonplaceholder.typicode.com/posts/1';
+
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
+
   constructor(private httpClient: HttpClient) {
   }
 
   public getUserFromApi(): Observable<Hero[]>{
-
-
-    return this.httpClient.get<Hero[]>('http://jsonplaceholder.typicode.com/users')
+    return this.httpClient.get<Hero[]>(this.getUsers)
       .pipe(
         catchError(this.handleError<Hero[]>('getting users api call Failed', []))
       );
   }
 
+  public updateUserFromApi(ud: UserDetails): Observable<UserDetails[]>{
+    return this.httpClient.put<UserDetails[]>(this.postUsers, ud, this.httpOptions)
 
+      .pipe(
+        catchError(this.handleError<UserDetails[]>('updating users api call Failed', []))
+      );
+  }
 
 
 

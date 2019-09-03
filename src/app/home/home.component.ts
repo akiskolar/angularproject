@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {Todo, HttpService, Hero} from '../http.service';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
+import {MAT_CHECKBOX_CLICK_ACTION, MatPaginator, MatTableDataSource} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 
@@ -9,7 +9,10 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  providers: [
+    {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check-indeterminate'}
+  ]
 })
 
 export class HomeComponent implements OnInit {
@@ -39,24 +42,25 @@ export class HomeComponent implements OnInit {
   }
 
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
   ngOnInit() {
     this.getUsers();
     this.getUsersFromTodos();
   }
 
-  displayedColumns: string[] = ['id', 'name', 'username', 'phone'];
-  dataSource: MatTableDataSource<Hero>;
+  displayedColumns2: string[] = ['id', 'name', 'username', 'phone'];
+  dataSource2: MatTableDataSource<Hero>;
 
-  displayedColumns2: string[] = ['userId', 'id', 'title', 'completed'];
-  dataSource2: MatTableDataSource<Todo>;
+  displayedColumns: string[] = ['userId', 'id', 'title', 'completed'];
+  dataSource: MatTableDataSource<Todo>;
 
   getUsers(): void {
     this.http.getUserFromApi()
       .subscribe(users => {
         this.user = users;
         //this.phones = users;
-        this.dataSource = new MatTableDataSource(this.user);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource2 = new MatTableDataSource(this.user);
+        this.dataSource2.paginator = this.paginator;
       });
   }
 
@@ -65,8 +69,8 @@ export class HomeComponent implements OnInit {
       .subscribe(users => {
         this.todo = users;
         //this.phones = users;
-        this.dataSource2 = new MatTableDataSource(this.todo);
-        //this.dataSource2.paginator = this.paginator2;
+        this.dataSource = new MatTableDataSource(this.todo);
+        this.dataSource.paginator = this.paginator;
       });
   }
 

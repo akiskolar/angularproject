@@ -11,3 +11,9 @@ table {
 .example-container > * {
   width: 50%;
 }
+
+.mat-form-field {
+  font-size: 20px;
+  width: 50%;
+  align-content: center;
+}

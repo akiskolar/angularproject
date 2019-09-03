@@ -1,11 +1,10 @@
-
 <mat-toolbar>
   <span>My Application</span>
 </mat-toolbar>
 
 <form class="example-container center">
 
-    <p></p>
+  <p></p>
   <mat-form-field>
     <mat-label>Device</mat-label>
     <mat-select [(ngModel)]="selectedDom" name="d">
@@ -77,16 +76,35 @@
 
 
 <p></p>
-<div class="mat-elevation-z10">
+
+<div class="mat-elevation-z20">
+
+  <mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
 
   <table mat-table [dataSource]="dataSource">
 
-    <!--- Note that these columns can be defined in any order.
-          The actual rendered columns are set as a property on the row definition" -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null"
+                      [checked]="selection.hasValue() && isAllSelected()"
+                      [indeterminate]="selection.hasValue() && !isAllSelected()"
+                      [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()"
+                      (change)="$event ? selection.toggle(row) : null"
+                      [checked]="selection.isSelected(row)"
+                      [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
 
-    <!-- Position Column -->
     <ng-container matColumnDef="userId">
-      <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge"> UserId</span></a></th>
+      <th mat-header-cell *matHeaderCellDef ><a href="#!" class="collection-item"><span class="badge"> UserId</span></a>
+      </th>
 
       <td mat-cell *matCellDef="let element"> {{element.userId}}</td>
 
@@ -95,14 +113,15 @@
     <!-- Name Column -->
     <a href="#!" class="collection-item"><span class="badge">
   <ng-container matColumnDef="id">
-    <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge"> ID</span></a></th>
+    <th mat-header-cell *matHeaderCellDef ><a href="#!" class="collection-item"><span class="badge"> ID</span></a></th>
     <td mat-cell *matCellDef="let element"> {{element.id}} </td>
   </ng-container>
  </span></a>
     <!-- Weight Column -->
     <a href="#!" class="collection-item"><span class="badge">
   <ng-container matColumnDef="title">
-    <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge">  Title</span></a></th>
+    <th mat-header-cell *matHeaderCellDef ><a href="#!" class="collection-item"><span
+      class="badge">  Title</span></a></th>
     <td mat-cell *matCellDef="let element"> {{element.title}} </td>
 
   </ng-container>
@@ -110,15 +129,21 @@
     <!-- Symbol Column -->
     <a href="#!" class="collection-item"><span class="badge">
   <ng-container matColumnDef="completed">
-    <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge">  Completed</span></a></th>
-    <td mat-cell *matCellDef="let element" > <mat-checkbox [checked]="element.completed" [(ngModel)]="element.completed"></mat-checkbox> {{element.completed}} <mat-slide-toggle [checked]="element.completed" [(ngModel)]="element.completed"></mat-slide-toggle></td>
+    <th mat-header-cell *matHeaderCellDef ><a href="#!" class="collection-item"><span
+      class="badge">  Completed</span></a></th>
+    <td mat-cell *matCellDef="let element"> <mat-checkbox [checked]="element.completed"
+                                                          [(ngModel)]="element.completed"></mat-checkbox>
+      {{element.completed}}
+      <mat-slide-toggle [checked]="element.completed" [(ngModel)]="element.completed"></mat-slide-toggle></td>
   </ng-container>
     </span></a>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="values(row);"></tr>
-
-
   </table>
-  <mat-paginator [pageSizeOptions]="[10, 20, 40]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [length]="100"
+                 [pageSize]="5"
+                 [pageSizeOptions]="[5, 10, 15, 30, 50, 100]" showFirstLastButtons></mat-paginator>
+
+
 </div>

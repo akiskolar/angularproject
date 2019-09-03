@@ -2,16 +2,20 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
-import {UserDetails} from './home/home.component';
 
 
 export interface Hero {
-  id:string;
+  id:number;
+  name:string;
   username:string;
-  phone:string;
-  website:string;
-  address: Array<string>;
-  company:Array<string>;
+  phone:number;
+}
+
+export interface Todo {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
 };
 
 
@@ -21,7 +25,7 @@ export interface Hero {
 export class HttpService {
 
   private getUsers = 'http://jsonplaceholder.typicode.com/users';  // URL to web api
-  private postUsers = 'http://jsonplaceholder.typicode.com/posts/1';
+  private todoUrl = 'https://jsonplaceholder.typicode.com/todos';
 
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -37,11 +41,10 @@ export class HttpService {
       );
   }
 
-  public updateUserFromApi(ud: UserDetails): Observable<UserDetails[]>{
-    return this.httpClient.put<UserDetails[]>(this.postUsers, ud, this.httpOptions)
-
+  public getTodos(): Observable<Todo[]>{
+    return this.httpClient.get<Todo[]>(this.todoUrl)
       .pipe(
-        catchError(this.handleError<UserDetails[]>('updating users api call Failed', []))
+        catchError(this.handleError<Todo[]>('getting todo api call Failed', []))
       );
   }
 

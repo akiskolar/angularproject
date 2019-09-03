@@ -1,22 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Hero, HttpService} from '../http.service';
+import {Todo, HttpService, Hero} from '../http.service';
 import {MatPaginator, MatTableDataSource} from '@angular/material';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 
-export class UserDetails {
-  userId: number;
-  id: number;
-  title: string;
-  body: string;
 
-  constructor(number: number, number2: number, s: string, s2: string) {
-    this.userId = number;
-    this.id = number2;
-    this.title = s;
-    this.body = s2;
-  }
-};
 
 @Component({
   selector: 'app-home',
@@ -27,11 +15,13 @@ export class UserDetails {
 export class HomeComponent implements OnInit {
 
   user: Hero[] = [];
-  ud: UserDetails[] = [];
+  todo: Todo[] = [];
 
   options: FormGroup;
   selectedDom: string;
   selectedPhone: string;
+
+  enabled:boolean = true;
 
   constructor(private http: HttpService, fb: FormBuilder) {
     this.options = fb.group({
@@ -44,15 +34,21 @@ export class HomeComponent implements OnInit {
     return Math.max(10, this.options.value.fontSize);
   }
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  onRowClicked($event) {
+    console.log('Row clicked: ', $event);
+  }
 
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   ngOnInit() {
     this.getUsers();
-    this.postUsers();
+    this.getUsersFromTodos();
   }
 
   displayedColumns: string[] = ['id', 'name', 'username', 'phone'];
   dataSource: MatTableDataSource<Hero>;
+
+  displayedColumns2: string[] = ['userId', 'id', 'title', 'completed'];
+  dataSource2: MatTableDataSource<Todo>;
 
   getUsers(): void {
     this.http.getUserFromApi()
@@ -64,10 +60,19 @@ export class HomeComponent implements OnInit {
       });
   }
 
-  postUsers(): void {
-    this.http.updateUserFromApi(new UserDetails(133, 101, 'Aklilu', 'Belay'))
-      .subscribe( u=>{this.ud=u;
+  getUsersFromTodos(): void {
+    this.http.getTodos()
+      .subscribe(users => {
+        this.todo = users;
+        //this.phones = users;
+        this.dataSource2 = new MatTableDataSource(this.todo);
+        //this.dataSource2.paginator = this.paginator2;
       });
   }
 
+
+  values(row: any) {
+    console.log('Row clicked: ', row);
+    alert(row.completed +" "+ row.id +" "+  row.title +" "+ row.userId);
+  }
 }

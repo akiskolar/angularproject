@@ -66,8 +66,59 @@
     <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
   </ng-container>
  </span></a>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+</div>
+
+
+<p></p>
+<div class="mat-elevation-z8">
+
+  <table mat-table [dataSource]="dataSource2">
+
+    <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="userId">
+      <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge"> UserId</span></a></th>
+
+      <td mat-cell *matCellDef="let element"> {{element.userId}}</td>
+
+    </ng-container>
+
+    <!-- Name Column -->
+    <a href="#!" class="collection-item"><span class="badge">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge"> ID</span></a></th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+ </span></a>
+    <!-- Weight Column -->
+    <a href="#!" class="collection-item"><span class="badge">
+  <ng-container matColumnDef="title">
+    <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge">  Title</span></a></th>
+    <td mat-cell *matCellDef="let element"> {{element.title}} </td>
+
+  </ng-container>
+ </span></a>
+    <!-- Symbol Column -->
+    <a href="#!" class="collection-item"><span class="badge">
+  <ng-container matColumnDef="completed">
+    <th mat-header-cell *matHeaderCellDef><a href="#!" class="collection-item"><span class="badge">  Completed</span></a></th>
+    <td mat-cell *matCellDef="let element" > <button>{{element.completed}}</button> </td>
+  </ng-container>
+    </span></a>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns2" (click)="values(row);"></tr>
+
+
+  </table>
+<!--
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+-->
 </div>
